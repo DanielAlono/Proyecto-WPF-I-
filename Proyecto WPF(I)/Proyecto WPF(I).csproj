@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="VisibilidadConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,6 +112,36 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="flecha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drama.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\comedia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cienciaFiccion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\accion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\terror.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="comedia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="drama.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="accion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="terror.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cienciaFiccion.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

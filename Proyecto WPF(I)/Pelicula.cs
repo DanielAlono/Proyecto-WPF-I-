@@ -80,15 +80,31 @@ namespace Proyecto_WPF_I_
             }
         }
 
+        private bool _acertada;
+
+        public bool Acertada
+        {
+            get { return this._acertada; }
+            set
+            {
+                if(this._acertada != value)
+                {
+                    this._acertada = value;
+                    this.NotifyPropertyChanged("Acertada");
+                }
+            }
+        }
+
         public Pelicula() { }
 
-        public Pelicula(string titulo, string imagen, string pista, string dificultad, string genero)
+        public Pelicula(string titulo, string imagen, string pista, string dificultad, string genero, bool acertada)
         {
             Titulo = titulo;
             Imagen = imagen;
             Pista = pista;
             Dificultad = dificultad;
             Genero = genero;
+            Acertada = acertada;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

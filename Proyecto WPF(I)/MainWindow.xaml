@@ -6,17 +6,19 @@
         xmlns:local="clr-namespace:Proyecto_WPF_I_"
         mc:Ignorable="d"
         Title="Películas"
-        Height="800"
-        Width="900"
+        MinHeight="800"
+        MinWidth="900"
         WindowState="Maximized">
     <Window.Resources>
+        <local:VisibilidadConverter x:Key="VisibilidadConverter"></local:VisibilidadConverter>
+        <!--Estilo colores fondo-->
         <Style TargetType="Grid"
-               x:Key="gestionarPeliculasGrid">
+               x:Key="colorPeliculaGrid">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=Dificultad}"
                              Value="Facil">
                     <Setter Property="Background"
-                            Value="GreenYellow" />
+                            Value="Green" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Dificultad}"
                              Value="Normal">
@@ -26,16 +28,78 @@
                 <DataTrigger Binding="{Binding Path=Dificultad}"
                              Value="Dificil">
                     <Setter Property="Background"
-                            Value="OrangeRed" />
+                            Value="Red" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <!--Estilo imagenes flechas-->
         <Style TargetType="Image"
                x:Key="flechaImagen">
             <Setter Property="Height"
                     Value="40" />
             <Setter Property="Margin"
                     Value="10,0,10,0" />
+        </Style>
+        <!--Estilos imágenes género con triggers-->
+        <Style TargetType="Image"
+               x:Key="iconoComediaImage">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Genero}"
+                             Value="Comedia">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image"
+               x:Key="iconoDramaImage">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Genero}"
+                             Value="Drama">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image"
+               x:Key="iconoAccionImage">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Genero}"
+                             Value="Acción">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image"
+               x:Key="iconoTerrorImage">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Genero}"
+                             Value="Terror">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Image"
+               x:Key="iconoFiccionImage">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Genero}"
+                             Value="Ciencia Ficción">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="TextBlock"
                x:Key="contadorImagenTextBlock">
@@ -110,7 +174,8 @@
     <Grid Margin="10">
         <TabControl>
             <TabItem Header="Jugar">
-                <Grid Margin="10">
+                <Grid x:Name="verPeliculaGrid"
+                      Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
@@ -119,12 +184,24 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition Width="400"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Row="0"
-                           Grid.Column="0"
-                           Margin="30,10,30,30"
-                           Stretch="Uniform"></Image>
+                    <!--Grid que he utilizado para solamente un color de fondo-->
+                    <Grid Grid.Row="0"
+                          Grid.Column="0"
+                          Style="{StaticResource colorPeliculaGrid}">
+                        <!--Imagen de la película-->
+                        <Image Margin="10"
+                               Source="{Binding Path=Imagen}"
+                               Stretch="Fill">
+                            <Image.BitmapEffect>
+                                <BlurBitmapEffect Radius="20" />
+                            </Image.BitmapEffect>
+                        </Image>
+                    </Grid>
+                    <!--Panel de la derecha-->
                     <StackPanel Grid.Row="0"
-                                Grid.Column="1">
+                                Grid.Column="1"
+                                Margin="5">
+                        <!--Puntuación y nueva partida-->
                         <DockPanel>
                             <TextBlock DockPanel.Dock="Top"
                                        Margin="20,0,0,0">Puntuación total:</TextBlock>
@@ -136,39 +213,74 @@
                                         Width="150"
                                         Margin="20,0,0,0">
                                     <Viewbox>
-                                        <TextBlock>99</TextBlock>
+                                        <TextBlock x:Name="puntuacionTextBlock"></TextBlock>
                                     </Viewbox>
                                 </Border>
-                                <Button DockPanel.Dock="Right"
+                                <Button x:Name="nuevaPartidaButton"
+                                        Click="nuevaPartidaButton_Click"
+                                        DockPanel.Dock="Right"
                                         Margin="0,0,10,0"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top">Nueva Partida</Button>
                             </DockPanel>
                         </DockPanel>
+                        <!--Comprobación de la película-->
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,100,0,0">
-                            <TextBox Width="250"
+                            <TextBox x:Name="tituloPeliculaTextBox"
+                                     Width="250"
                                      Margin="20"></TextBox>
-                            <Button>Validar</Button>
+                            <Button x:Name="validarButton"
+                                    Click="validarButton_Click">Validar</Button>
                         </StackPanel>
-                        <CheckBox Margin="20,20,0,0">Ver pista</CheckBox>
-                        <TextBlock Margin="20,20,0,0"
+                        <CheckBox x:Name="verPistaCheckBox"
+                                  Margin="20,20,0,0">Ver pista</CheckBox>
+                        <TextBlock x:Name="pistaTextBlock"
+                                   Text="{Binding Path=Pista}"
+                                   Visibility="{Binding ElementName=verPistaCheckBox, Path=IsChecked, Converter={StaticResource VisibilidadConverter}}"
+                                   Margin="20,20,0,0"
                                    FontSize="25"
+                                   FontFamily="Comic Sans"
                                    FontWeight="Bold"
                                    TextWrapping="Wrap"
-                                   HorizontalAlignment="Center">Esto es una prueba de pista</TextBlock>
-                        <Image Height="100"
-                               Width="100"
-                               Margin="80,80,80,10"></Image>
+                                   HorizontalAlignment="Center"></TextBlock>
+                        <!--Imágenes para los géneros-->
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Image Height="150"
+                                   Width="150"
+                                   Source="comedia.png"
+                                   Style="{StaticResource iconoComediaImage}"></Image>
+                            <Image Height="150"
+                                   Width="150"
+                                   Source="drama.png"
+                                   Style="{StaticResource iconoDramaImage}"></Image>
+                            <Image Height="150"
+                                   Width="150"
+                                   Source="accion.png"
+                                   Style="{StaticResource iconoAccionImage}"></Image>
+                            <Image Height="150"
+                                   Width="150"
+                                   Source="terror.png"
+                                   Style="{StaticResource iconoTerrorImage}"></Image>
+                            <Image Height="150"
+                                   Width="150"
+                                   Source="cienciaFiccion.png"
+                                   Style="{StaticResource iconoFiccionImage}"></Image>
+                        </StackPanel>
                         <TextBlock HorizontalAlignment="Center"
-                                   FontSize="15"
-                                   FontWeight="Bold">Genero</TextBlock>
+                                   Text="{Binding Path=Genero}"
+                                   FontSize="35"
+                                   FontWeight="Bold"></TextBlock>
                     </StackPanel>
+                    <!--Flechas para avanzar y retroceder-->
                     <StackPanel Grid.Row="2"
                                 Grid.ColumnSpan="2"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center">
-                        <Image Style="{StaticResource flechaImagen}"
+                        <Image x:Name="retrocederFlechaImage"
+                               MouseLeftButtonDown="retrocederFlechaImage_MouseLeftButtonDown"
+                               Style="{StaticResource flechaImagen}"
                                Source="flecha.png"
                                RenderTransformOrigin="0.5,0.5">
                             <Image.RenderTransform>
@@ -182,10 +294,14 @@
                                 </TransformGroup>
                             </Image.RenderTransform>
                         </Image>
-                        <TextBlock Style="{StaticResource contadorImagenTextBlock}">1</TextBlock>
+                        <TextBlock x:Name="actualPeliculaTextBlock"
+                                   Style="{StaticResource contadorImagenTextBlock}"></TextBlock>
                         <TextBlock Style="{StaticResource contadorImagenTextBlock}">/</TextBlock>
-                        <TextBlock Style="{StaticResource contadorImagenTextBlock}">5</TextBlock>
-                        <Image Style="{StaticResource flechaImagen}"
+                        <TextBlock x:Name="totalPeliculasTextBlock"
+                                   Style="{StaticResource contadorImagenTextBlock}"></TextBlock>
+                        <Image x:Name="avanzarFlechaImage"
+                               MouseLeftButtonDown="avanzarFlechaImage_MouseLeftButtonDown"
+                               Style="{StaticResource flechaImagen}"
                                Source="flecha.png"></Image>
                     </StackPanel>
                 </Grid>
@@ -205,6 +321,7 @@
                             Margin="10,20,0,20"
                             BorderThickness="2"
                             BorderBrush="Black">
+                        <!--Panel de películas-->
                         <ListBox x:Name="peliculasListBox"
                                  ItemsSource="{Binding}"
                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -213,7 +330,7 @@
                                     <Grid Margin="10"
                                           Width="200"
                                           Height="250"
-                                          Style="{StaticResource gestionarPeliculasGrid}">
+                                          Style="{StaticResource colorPeliculaGrid}">
                                         <Grid.Effect>
                                             <DropShadowEffect />
                                         </Grid.Effect>
@@ -247,29 +364,35 @@
                             </ListBox.ItemsPanel>
                         </ListBox>
                     </Border>
+                    <!--Botonoes para la gestión-->
                     <StackPanel Grid.Row="0"
                                 Grid.Column="1">
                         <StackPanel Margin="5,20,5,20">
+                            <!--Cargar un archivo-->
                             <Button x:Name="cargarJSONButton"
                                     Margin="5"
                                     Width="140"
                                     Click="cargarJSONButton_Click">Cargar de JSON</Button>
+                            <!--Guardar un archivo-->
                             <Button x:Name="guardarJSONButton"
                                     Margin="5"
                                     Width="140"
                                     Click="guardarJSONButton_Click">Guardar en JSON</Button>
                         </StackPanel>
                         <StackPanel Margin="5,20,5,20">
+                            <!--ELIMINAR-->
                             <Button x:Name="eliminarButton"
                                     Click="eliminarButton_Click"
                                     Margin="5"
                                     Width="140">Eliminar película</Button>
+                            <!--AÑADIR-->
                             <Button x:Name="añadirButton"
                                     Click="añadirButton_Click"
                                     Margin="5"
                                     Width="140">Añadir película</Button>
                         </StackPanel>
                     </StackPanel>
+                    <!--GRID para rellenar los campos de la película-->
                     <Grid Grid.Row="1"
                           Grid.ColumnSpan="2"
                           DataContext="{Binding ElementName=peliculasListBox, Path=SelectedItem}">
@@ -304,6 +427,7 @@
                                  Text="{Binding Path=Imagen, UpdateSourceTrigger=PropertyChanged}"
                                  Grid.Row="2"
                                  Grid.Column="1"></TextBox>
+                        <!--Botón para añadir imagen desde LOCAL-->
                         <Button x:Name="examinarButton"
                                 Click="examinarButton_Click"
                                 Grid.Row="2"
